@@ -28,7 +28,17 @@ public class MahasiswaGui extends javax.swing.JFrame {
         txtNama.setEnabled(false);
         txtJurusan.setEnabled(false);
     }
-
+    
+    public void refresh(){
+        txtNim.setText("");        
+	txtNama.setText("");
+        txtJurusan.setText("");
+        
+        btnSimpan.setEnabled(true);
+        btnHapus.setEnabled(true);
+        btnSimpan.setText("Simpan");
+    }
+    
     public void judul() { 
         Object[] judul = {"Nim", "Nama", "Jurusan"};
         tabModel = new DefaultTableModel(null, judul);
@@ -76,6 +86,7 @@ public class MahasiswaGui extends javax.swing.JFrame {
         btnHapus = new javax.swing.JButton();
         btnKeluar = new javax.swing.JButton();
         btnRefresh = new javax.swing.JButton();
+        btnEdit = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -150,29 +161,41 @@ public class MahasiswaGui extends javax.swing.JFrame {
             }
         });
 
+        btnEdit.setText("Edit");
+        btnEdit.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnEditActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addGap(31, 31, 31)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addComponent(jLabel4)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(txtJurusan, javax.swing.GroupLayout.PREFERRED_SIZE, 131, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addComponent(jLabel3)
-                        .addGap(37, 37, 37)
-                        .addComponent(txtNama, javax.swing.GroupLayout.PREFERRED_SIZE, 132, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addComponent(jLabel2)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(txtNim, javax.swing.GroupLayout.PREFERRED_SIZE, 131, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addComponent(btnTambah, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(btnSimpan, javax.swing.GroupLayout.PREFERRED_SIZE, 97, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(31, 31, 31)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                .addComponent(jLabel4)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(txtJurusan, javax.swing.GroupLayout.PREFERRED_SIZE, 131, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                .addComponent(jLabel3)
+                                .addGap(37, 37, 37)
+                                .addComponent(txtNama, javax.swing.GroupLayout.PREFERRED_SIZE, 132, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                .addComponent(jLabel2)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(txtNim, javax.swing.GroupLayout.PREFERRED_SIZE, 131, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                .addComponent(btnTambah, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(btnSimpan, javax.swing.GroupLayout.PREFERRED_SIZE, 97, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(116, 116, 116)
+                        .addComponent(btnEdit, javax.swing.GroupLayout.PREFERRED_SIZE, 73, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 41, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel1)
@@ -208,7 +231,9 @@ public class MahasiswaGui extends javax.swing.JFrame {
                         .addGap(33, 33, 33)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addComponent(btnTambah)
-                            .addComponent(btnSimpan)))
+                            .addComponent(btnSimpan))
+                        .addGap(23, 23, 23)
+                        .addComponent(btnEdit))
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 275, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -241,24 +266,32 @@ public class MahasiswaGui extends javax.swing.JFrame {
         
         btnSimpan.setEnabled(true);
         btnHapus.setEnabled(true);
-        btnSimpan.setText("Simpan");// TODO add your handling code here:
+        btnSimpan.setText("Simpan");
+        edit=false; // TODO add your handling code here:
     }//GEN-LAST:event_btnRefreshActionPerformed
 
     private void btnSimpanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSimpanActionPerformed
         IsiData i = new IsiData();
-        i.setNim(txtNim.getText());
-        i.setNama(txtNama.getText());
-        i.setJurusan(txtJurusan.getText());
         try {
-            st = cn.createStatement();
-            st.executeUpdate("INSERT INTO data VALUES('"+txtNim.getText()+"','"+
+            if (edit){
+                st = cn.createStatement();
+                st.executeUpdate("INSERT INTO data VALUES('"+txtNim.getText()+"','"+
                     txtNama.getText()+"','"+txtJurusan.getText()+"')");
+                }else {
+			st.executeUpdate("INSERT INTO data VALUES ('"+txtNim.getText()+"','"+txtNama.getText()+"','"+txtJurusan.getText()+"')");
+		}
             TampilData("");
-            JOptionPane.showMessageDialog(null, "Simpan Berhasil");
+            if (edit){
+			JOptionPane.showMessageDialog(null, "Update Berhasil");
+		}else {
+			JOptionPane.showMessageDialog(null, "Simpan Berhasil");
+		}
+		refresh();
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null, "Simpan Gagal");
         e.printStackTrace();  
-        }        
+        }
+        refresh();
     }//GEN-LAST:event_btnSimpanActionPerformed
 
     private void btnKeluarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnKeluarActionPerformed
@@ -266,16 +299,17 @@ public class MahasiswaGui extends javax.swing.JFrame {
     }//GEN-LAST:event_btnKeluarActionPerformed
 
     private void btnHapusActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnHapusActionPerformed
-    try{
-        int hapus;
-        if ((hapus = JOptionPane.showConfirmDialog(null, "Ingin menghapus data?", "Konfirmasi?", JOptionPane.YES_NO_OPTION)) == 0) {
-            st = cn.createStatement();
-            st.executeUpdate("DELETE FROM data WHERE nim='"+ tabModel.getValueAt(Tabel.getSelectedRow(), 0) + "'");
-            TampilData("");
-        }
-    }catch (Exception e) {
-    e.printStackTrace();
-    }        // TODO add your handling code here:
+    try {
+	int jawab;
+	if ((jawab = JOptionPane.showConfirmDialog(null, "Ingin menghapus data?", "konfirmasi", JOptionPane.YES_NO_OPTION)) == 0) {
+	st = cn.createStatement();
+	st.executeUpdate("DELETE FROM data WHERE nim='"+ tabModel.getValueAt(Tabel.getSelectedRow(), 0) + "'");
+	TampilData("");
+	refresh();
+	}
+	} catch (Exception e) {
+            e.printStackTrace();
+	}       // TODO add your handling code here:
     }//GEN-LAST:event_btnHapusActionPerformed
 
     private void TabelAncestorAdded(javax.swing.event.AncestorEvent evt) {//GEN-FIRST:event_TabelAncestorAdded
@@ -283,8 +317,34 @@ public class MahasiswaGui extends javax.swing.JFrame {
     }//GEN-LAST:event_TabelAncestorAdded
 
     private void TabelMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_TabelMouseClicked
-                   // TODO add your handling code here:
+        sNim=(Tabel.getValueAt(Tabel.getSelectedRow(), 0).toString());
+
+	txtNama.setText(Tabel.getValueAt(Tabel.getSelectedRow(), 2).toString());
+	txtJurusan.setText(Tabel.getValueAt(Tabel.getSelectedRow(), 3).toString());
+	
+	txtNim.setText(sNim);
+	txtNim.setEnabled(false);
+	txtNama.setEnabled(false);
+	txtJurusan.setEnabled(false);
+	
+	btnSimpan.setEnabled(false);
+	btnEdit.setEnabled(true);
+	btnHapus.setEnabled(true);
+        refresh();// TODO add your handling code here:
     }//GEN-LAST:event_TabelMouseClicked
+
+    private void btnEditActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditActionPerformed
+        edit=true;
+
+        txtNim.setEnabled(true);
+	txtNama.setEnabled(true);
+	txtJurusan.setEnabled(true);
+
+        btnSimpan.setText("Update");
+	btnSimpan.setEnabled(true);
+	btnEdit.setEnabled(false);
+	btnHapus.setEnabled(false);// TODO add your handling code here:
+    }//GEN-LAST:event_btnEditActionPerformed
 
     /**
      * @param args the command line arguments
@@ -299,6 +359,7 @@ public class MahasiswaGui extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTable Tabel;
+    private javax.swing.JButton btnEdit;
     private javax.swing.JButton btnHapus;
     private javax.swing.JButton btnKeluar;
     private javax.swing.JButton btnRefresh;
