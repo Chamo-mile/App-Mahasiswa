@@ -24,6 +24,8 @@ public class MahasiswaGui extends javax.swing.JFrame {
         setVisible(true);
         judul();
         TampilData("");
+        refresh();
+        
         txtNim.setEnabled(false);
         txtNama.setEnabled(false);
         txtJurusan.setEnabled(false);
@@ -34,9 +36,12 @@ public class MahasiswaGui extends javax.swing.JFrame {
 	txtNama.setText("");
         txtJurusan.setText("");
         
+        btnTambah.setEnabled(true);
         btnSimpan.setEnabled(true);
         btnHapus.setEnabled(true);
+        btnEdit.setEnabled(true);
         btnSimpan.setText("Simpan");
+        edit=false;
     }
     
     public void judul() { 
@@ -260,23 +265,15 @@ public class MahasiswaGui extends javax.swing.JFrame {
     }//GEN-LAST:event_btnTambahActionPerformed
 
     private void btnRefreshActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRefreshActionPerformed
-        txtNim.setText("");
-        txtNama.setText("");
-        txtJurusan.setText(""); 
-        
-        btnSimpan.setEnabled(true);
-        btnHapus.setEnabled(true);
-        btnSimpan.setText("Simpan");
-        edit=false; // TODO add your handling code here:
+        refresh(); // TODO add your handling code here:
     }//GEN-LAST:event_btnRefreshActionPerformed
 
     private void btnSimpanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSimpanActionPerformed
-        IsiData i = new IsiData();
         try {
+            st = cn.createStatement();
             if (edit){
-                st = cn.createStatement();
-                st.executeUpdate("INSERT INTO data VALUES('"+txtNim.getText()+"','"+
-                    txtNama.getText()+"','"+txtJurusan.getText()+"')");
+                    st.executeUpdate("UPDATE data set " +"nim='"+ txtNim.getText() + "', "
+                    + "nama='" + txtNama.getText() + "'," + "jurusan='" + txtJurusan.getText()+"' WHERE nim ='" + sNim + "' ");
                 }else {
 			st.executeUpdate("INSERT INTO data VALUES ('"+txtNim.getText()+"','"+txtNama.getText()+"','"+txtJurusan.getText()+"')");
 		}
@@ -288,10 +285,8 @@ public class MahasiswaGui extends javax.swing.JFrame {
 		}
 		refresh();
         } catch (Exception e) {
-            JOptionPane.showMessageDialog(null, "Simpan Gagal");
-        e.printStackTrace();  
+                e.printStackTrace();  
         }
-        refresh();
     }//GEN-LAST:event_btnSimpanActionPerformed
 
     private void btnKeluarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnKeluarActionPerformed
@@ -319,8 +314,8 @@ public class MahasiswaGui extends javax.swing.JFrame {
     private void TabelMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_TabelMouseClicked
         sNim=(Tabel.getValueAt(Tabel.getSelectedRow(), 0).toString());
 
-	txtNama.setText(Tabel.getValueAt(Tabel.getSelectedRow(), 2).toString());
-	txtJurusan.setText(Tabel.getValueAt(Tabel.getSelectedRow(), 3).toString());
+	txtNama.setText(Tabel.getValueAt(Tabel.getSelectedRow(), 3).toString());
+	txtJurusan.setText(Tabel.getValueAt(Tabel.getSelectedRow(), 4).toString());
 	
 	txtNim.setText(sNim);
 	txtNim.setEnabled(false);
