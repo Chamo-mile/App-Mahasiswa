@@ -28,20 +28,21 @@ public class MahasiswaGui extends javax.swing.JFrame {
         
         txtNim.setEnabled(false);
         txtNama.setEnabled(false);
-        txtJurusan.setEnabled(false);
+        cmbJurusan.setEnabled(false);
     }
     
     public void refresh(){
         txtNim.setText("");        
 	txtNama.setText("");
-        txtJurusan.setText("");
         
+        cmbJurusan.setEnabled(true);
         btnTambah.setEnabled(true);
         btnSimpan.setEnabled(true);
         btnHapus.setEnabled(true);
         btnEdit.setEnabled(true);
         btnSimpan.setText("Simpan");
         edit=false;
+        TampilData("");
     }
     
     public void judul() { 
@@ -59,13 +60,33 @@ public class MahasiswaGui extends javax.swing.JFrame {
         
         while (rs.next()) {
             Object[] data = {
-                rs.getString("nim"), rs.getString("nama"),
+                rs.getString("nim"), 
+                rs.getString("nama"),
                 rs.getString("jurusan")};
             tabModel.addRow(data);
         }
     }catch(Exception e) {
         e.printStackTrace();
     }
+    }
+    
+    private void cariData(String key){
+        try{
+            st = cn.createStatement();
+            tabModel.getDataVector().removeAllElements();
+            
+            rs =st.executeQuery("SELECT * from data WHERE nama LIKE '%"+key+"%' OR nim LIKE '%"+key+"%' OR nim LIKE '%"+key+"%'");  
+            while(rs.next()){
+                Object[] data={
+                rs.getString("nim"),
+                rs.getString("nama"),
+                rs.getString("jurusan")
+                };
+               tabModel.addRow(data);
+            }                
+        } catch (Exception e) {
+        e.printStackTrace();
+        }
     }
     
     /**
@@ -83,7 +104,6 @@ public class MahasiswaGui extends javax.swing.JFrame {
         jLabel4 = new javax.swing.JLabel();
         txtNim = new javax.swing.JTextField();
         txtNama = new javax.swing.JTextField();
-        txtJurusan = new javax.swing.JTextField();
         btnTambah = new javax.swing.JButton();
         btnSimpan = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
@@ -92,6 +112,9 @@ public class MahasiswaGui extends javax.swing.JFrame {
         btnKeluar = new javax.swing.JButton();
         btnRefresh = new javax.swing.JButton();
         btnEdit = new javax.swing.JButton();
+        txtCari = new javax.swing.JTextField();
+        jLabel5 = new javax.swing.JLabel();
+        cmbJurusan = new javax.swing.JComboBox<>();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -173,79 +196,101 @@ public class MahasiswaGui extends javax.swing.JFrame {
             }
         });
 
+        txtCari.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                txtCariKeyReleased(evt);
+            }
+        });
+
+        jLabel5.setText("Cari Data");
+
+        cmbJurusan.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "TI", "SI" }));
+        cmbJurusan.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cmbJurusanActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+            .addGroup(layout.createSequentialGroup()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
                         .addGap(31, 31, 31)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                                .addComponent(jLabel4)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(txtJurusan, javax.swing.GroupLayout.PREFERRED_SIZE, 131, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                                .addComponent(jLabel3)
-                                .addGap(37, 37, 37)
-                                .addComponent(txtNama, javax.swing.GroupLayout.PREFERRED_SIZE, 132, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                                .addComponent(jLabel2)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(txtNim, javax.swing.GroupLayout.PREFERRED_SIZE, 131, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                                .addComponent(btnTambah, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(btnSimpan, javax.swing.GroupLayout.PREFERRED_SIZE, 97, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jLabel2)
+                                    .addComponent(jLabel3))
+                                .addGap(30, 30, 30)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(txtNama, javax.swing.GroupLayout.PREFERRED_SIZE, 132, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(txtNim, javax.swing.GroupLayout.PREFERRED_SIZE, 131, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                .addGroup(layout.createSequentialGroup()
+                                    .addComponent(btnTambah, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addGap(56, 56, 56)
+                                    .addComponent(btnSimpan, javax.swing.GroupLayout.PREFERRED_SIZE, 97, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
+                                    .addComponent(jLabel4)
+                                    .addGap(100, 100, 100)
+                                    .addComponent(cmbJurusan, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                .addComponent(btnKeluar, javax.swing.GroupLayout.PREFERRED_SIZE, 73, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGroup(layout.createSequentialGroup()
+                                    .addComponent(btnEdit, javax.swing.GroupLayout.PREFERRED_SIZE, 73, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                    .addComponent(btnRefresh, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                    .addComponent(btnHapus, javax.swing.GroupLayout.PREFERRED_SIZE, 73, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+                                .addGroup(layout.createSequentialGroup()
+                                    .addComponent(jLabel5)
+                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 12, Short.MAX_VALUE)
+                                    .addComponent(txtCari, javax.swing.GroupLayout.PREFERRED_SIZE, 186, javax.swing.GroupLayout.PREFERRED_SIZE)))))
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(116, 116, 116)
-                        .addComponent(btnEdit, javax.swing.GroupLayout.PREFERRED_SIZE, 73, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 41, Short.MAX_VALUE)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel1)
-                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                        .addGroup(layout.createSequentialGroup()
-                            .addComponent(btnHapus, javax.swing.GroupLayout.PREFERRED_SIZE, 73, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGap(18, 18, 18)
-                            .addComponent(btnRefresh, javax.swing.GroupLayout.PREFERRED_SIZE, 96, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(btnKeluar, javax.swing.GroupLayout.PREFERRED_SIZE, 73, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 452, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addGap(33, 33, 33))
+                        .addGap(99, 99, 99)
+                        .addComponent(jLabel1)))
+                .addGap(33, 42, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(23, 23, 23)
+                .addGap(34, 34, 34)
                 .addComponent(jLabel1)
-                .addGap(29, 29, 29)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jLabel2)
-                            .addComponent(txtNim, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(20, 20, 20)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jLabel3)
-                            .addComponent(txtNama, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(22, 22, 22)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jLabel4)
-                            .addComponent(txtJurusan, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(33, 33, 33)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(btnTambah)
-                            .addComponent(btnSimpan))
-                        .addGap(23, 23, 23)
-                        .addComponent(btnEdit))
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 275, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel2)
+                    .addComponent(txtNim, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(20, 20, 20)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel3)
+                    .addComponent(txtNama, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(22, 22, 22)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel4)
+                    .addComponent(cmbJurusan, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(btnHapus)
-                    .addComponent(btnKeluar)
-                    .addComponent(btnRefresh))
-                .addContainerGap(16, Short.MAX_VALUE))
+                    .addComponent(btnTambah)
+                    .addComponent(btnSimpan))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(txtCari, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel5))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 8, Short.MAX_VALUE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 194, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(btnEdit)
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(btnHapus)
+                        .addComponent(btnRefresh)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(btnKeluar)
+                .addContainerGap())
         );
 
         pack();
@@ -254,11 +299,11 @@ public class MahasiswaGui extends javax.swing.JFrame {
     private void btnTambahActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnTambahActionPerformed
         txtNim.setEnabled(true);
         txtNama.setEnabled(true);
-        txtJurusan.setEnabled(true);
+        cmbJurusan.setEnabled(true);
         txtNim.setText("");        
 	txtNama.setText("");
-        txtJurusan.setText("");
-       
+        
+        cmbJurusan.setEnabled(true);
         btnSimpan.setEnabled(true);
         btnHapus.setEnabled(true);
         btnSimpan.setText("Simpan");        // TODO add your handling code here:
@@ -273,9 +318,9 @@ public class MahasiswaGui extends javax.swing.JFrame {
             st = cn.createStatement();
             if (edit){
                     st.executeUpdate("UPDATE data set " +"nim='"+ txtNim.getText() + "', "
-                    + "nama='" + txtNama.getText() + "'," + "jurusan='" + txtJurusan.getText()+"' WHERE nim ='" + sNim + "' ");
+                    + "nama='" + txtNama.getText() + "'," + "jurusan='" + cmbJurusan.getSelectedItem()+"' WHERE nim ='" + sNim + "' ");
                 }else {
-			st.executeUpdate("INSERT INTO data VALUES ('"+txtNim.getText()+"','"+txtNama.getText()+"','"+txtJurusan.getText()+"')");
+			st.executeUpdate("INSERT INTO data VALUES ('"+txtNim.getText()+"','"+txtNama.getText()+"','"+cmbJurusan.getSelectedItem()+"')");
 		}
             TampilData("");
             if (edit){
@@ -315,12 +360,12 @@ public class MahasiswaGui extends javax.swing.JFrame {
         sNim=(Tabel.getValueAt(Tabel.getSelectedRow(), 0).toString());
 
 	txtNama.setText(Tabel.getValueAt(Tabel.getSelectedRow(), 3).toString());
-	txtJurusan.setText(Tabel.getValueAt(Tabel.getSelectedRow(), 4).toString());
+	
 	
 	txtNim.setText(sNim);
 	txtNim.setEnabled(false);
 	txtNama.setEnabled(false);
-	txtJurusan.setEnabled(false);
+	cmbJurusan.setEnabled(false);
 	
 	btnSimpan.setEnabled(false);
 	btnEdit.setEnabled(true);
@@ -333,13 +378,28 @@ public class MahasiswaGui extends javax.swing.JFrame {
 
         txtNim.setEnabled(true);
 	txtNama.setEnabled(true);
-	txtJurusan.setEnabled(true);
+	cmbJurusan.setEnabled(true);
 
         btnSimpan.setText("Update");
 	btnSimpan.setEnabled(true);
 	btnEdit.setEnabled(false);
 	btnHapus.setEnabled(false);// TODO add your handling code here:
     }//GEN-LAST:event_btnEditActionPerformed
+
+    private void cmbJurusanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmbJurusanActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_cmbJurusanActionPerformed
+
+    private void txtCariKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtCariKeyReleased
+        String key=txtCari.getText();
+        System.out.println(key);  
+        
+        if(key!=""){
+            cariData(key);
+        }else{
+            TampilData("");
+        }        // TODO add your handling code here:
+    }//GEN-LAST:event_txtCariKeyReleased
 
     /**
      * @param args the command line arguments
@@ -360,12 +420,14 @@ public class MahasiswaGui extends javax.swing.JFrame {
     private javax.swing.JButton btnRefresh;
     private javax.swing.JButton btnSimpan;
     private javax.swing.JButton btnTambah;
+    private javax.swing.JComboBox<String> cmbJurusan;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel5;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTextField txtJurusan;
+    private javax.swing.JTextField txtCari;
     private javax.swing.JTextField txtNama;
     private javax.swing.JTextField txtNim;
     // End of variables declaration//GEN-END:variables
